@@ -140,11 +140,11 @@ PROPERTIES (
 
 参数说明：
 
-* **hosts**：Elasticsearch 集群连接地址，可指定一个或多个，StarRocks 通过这个地址获取到 Elasticsearch 版本号、索引的分片分布信息。
+* **hosts**：Elasticsearch 集群连接地址，可指定一个或多个，StarRocks 通过这个地址获取到 Elasticsearch 版本号、索引的分片分布信息。StarRocks 最后实际通讯地址是根据 `GET /_nodes/http` 返回的地址进行通讯，请确保 Elasticsearch 返回的地址和外表设置中的 hosts 地址相同，否则可能导致 BE 无法和 Elasticsearch 集群进行正常的通讯（通常这种问题会发生于一机多网卡的节点上）。
 * **user**：开启 **basic 认证** 的 Elasticsearch 集群的用户名，需要确保该用户有访问 **/*cluster/state/* nodes/http** 等路径权限和对索引的读权限。
 * **password**：对应用户的密码信息。
 * **index**：StarRocks 中的表对应的 Elasticsearch 的索引名字，可以是索引的别名。
-* **type**：指定索引的类型，默认是 **doc**。
+* **type**：指定索引的类型，默认是 **_doc**。在 Elasticsearch 8 中，type 已经被移除，建表时不需要填写 type 属性即可。
 * **transport**：内部保留，默认为 **http**。
 * **es.nodes.wan.only**：表示 StarRocks 是否仅使用 `hosts` 指定的地址，去访问 Elasticsearch 集群并获取数据。
   > 自 2.3.0 版本起，StarRocks 支持配置该参数。
@@ -156,19 +156,22 @@ PROPERTIES (
 | **Elasticsearch**          | **StarRocks**                     |
 | -------------------------- | --------------------------------- |
 | BOOLEAN                    | BOOLEAN                           |
-| BYTE                       | TINYINT/SMALLINT/INT/BIGINT |
-| SHORT                      | SMALLINT/INT/BIGINT           |
-| INTEGER                    | INT/BIGINT                      |
+| BYTE                       | TINYINT/SMALLINT/INT/BIGINT       |
+| SHORT                      | SMALLINT/INT/BIGINT               |
+| INTEGER                    | INT/BIGINT                        |
 | LONG                       | BIGINT                            |
 | FLOAT                      | FLOAT                             |
 | DOUBLE                     | DOUBLE                            |
-| KEYWORD                    | CHAR/VARCHAR                    |
-| TEXT                       | CHAR/VARCHAR                    |
-| DATE                       | DATE/DATETIME                   |
-| NESTED                     | CHAR/VARCHAR                    |
-| OBJECT                     | CHAR/VARCHAR                    |
+| KEYWORD                    | CHAR/VARCHAR                      |
+| TEXT                       | CHAR/VARCHAR                      |
+| DATE                       | DATE/DATETIME                     |
+| NESTED                     | CHAR/VARCHAR                      |
+| OBJECT                     | CHAR/VARCHAR                      |
+| ARRAY                      | ARRAY                             |
 
 > 说明：StarRocks 会通过 JSON 相关函数读取嵌套字段。
+>
+> 关于 Array 类型，因为在 Elasticsearch 中，多维数组会被自动打平成 1 为数组，故 StarRocks 也会做出相同行为的自动转换。
 
 ### 谓词下推
 
