@@ -21,24 +21,11 @@ upper(str)
 ## 示例
 
 ```plaintext
-MySQL [test]> select C_String from tbl;
-+---------------+
-| C_String      |
-+---------------+
-| Hello, China! |
-| Hello, World! |
-+---------------+
+MySQL [test]> select C_String, upper(C_String) from ex_iceberg_tbl;
++---------------+-----------------+
+| C_String      | upper(C_String) |
++---------------+-----------------+
+| Hello, China! | HELLO, CHINA!   |
+| Hello, World! | HELLO, WORLD!   |
++---------------+-----------------+
 ```
-
-```plaintext
-MySQL [test]> select upper(C_String) from tbl;
-+-----------------+
-| upper(C_String) |
-+-----------------+
-| HELLO, CHINA!   |
-| HELLO, WORLD!   |
-+-----------------+
-```
-
-
-
